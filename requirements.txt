@@ -11,4 +11,4 @@ pillow
 easyocr
 # PyMuPDF
 opencv-python
-torch==1.11.0
+torch
