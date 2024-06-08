@@ -46,7 +46,8 @@ def pdf_to_text(pdf_path, lang='aze'):
     extracted_text = ""
 
     for img in images:
-@@ -51,28 +26,21 @@ def pdf_to_text(pdf_path, lang='aze'):
+        text = pytesseract.image_to_string(img, lang=lang)
+        extracted_text += text + "\n"
 
     return extracted_text
 
