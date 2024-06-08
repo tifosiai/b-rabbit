@@ -9,9 +9,9 @@ import helpers.constants as constants
 import helpers.opencv as opencv
 import helpers.pdfimage as pdfimage
 import helpers.tesseract as tesseract
+import easyocr
 
 language_options_list = list(constants.languages_sorted.values())
-
 
 def init_tesseract():
     tess_version = None
@@ -50,20 +50,29 @@ def pdf_to_text(pdf_path, lang='aze'):
 
     return extracted_text
 
-def image_to_text(image, lang='aze'):
+def read_text_from_image(image_path, language='az'):
     """
-    Convert an image file to text using Tesseract OCR.
-    
-    Parameters:
-    image (PIL.Image): Image file.
-    lang (str): Language code for Tesseract OCR (default is 'aze' for Azerbaijani).
-    
-    Returns:
-    str: Extracted text from the image.
-    """
-    return pytesseract.image_to_string(image, lang=lang)
+    Read text from an image file using EasyOCR.
 
-# streamlit config
+    Args:
+    - image_path (str): Path to the image file.
+    - language (str): Language code (e.g., 'en' for English, 'az' for Azerbaijani).
+
+    Returns:
+    - text (str): Extracted text from the image.
+    """
+    # Initialize the EasyOCR reader
+    reader = easyocr.Reader([language])
+
+    # Process the image
+    result = reader.readtext(image_path)
+
+    # Extract text from the result
+    text = ' '.join([box[1] for box in result])
+
+    return text
+
+# Streamlit config
 st.set_page_config(
     page_title="Tesseract OCR",
     page_icon="📝",
@@ -73,21 +82,6 @@ st.set_page_config(
 
 # init tesseract
 tesseract_version = init_tesseract()
-
-
-lang = 'aze'  # Fixed language option
-def image_to_text(image, lang='aze'):
-    """
-    Convert an image file to text using Tesseract OCR.
-    
-    Parameters:
-    image (PIL.Image): Image file.
-    lang (str): Language code for Tesseract OCR (default is 'aze' for Azerbaijani).
-    
-    Returns:
-    str: Extracted text from the image.
-    """
-    return pytesseract.image_to_string(image, lang=lang)
 
 # Streamlit app
 st.title("B-Rabbit: OCR for 🇦🇿")
@@ -114,8 +108,11 @@ if uploaded_file is not None:
 
             # Process image file
             else:
-                image = Image.open(uploaded_file)
-                extracted_text = image_to_text(image, lang=lang)
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_image:
+                    temp_image.write(uploaded_file.getbuffer())
+                    temp_image_path = temp_image.name
+                extracted_text = read_text_from_image(temp_image_path, language='az')
+                os.remove(temp_image_path)
             
             # Display the extracted text
             st.subheader("Extracted Text")
