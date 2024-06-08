@@ -73,9 +73,6 @@ st.set_page_config(
 # init tesseract
 tesseract_version = init_tesseract()
 
-st.title(f"Tesseract OCR :mag_right: {constants.flag_string}")
-st.markdown("---")
-
 # Streamlit app
 st.title("B-Rabbit: OCR for 🇦🇿")
 
