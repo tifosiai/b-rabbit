@@ -75,8 +75,29 @@ st.set_page_config(
 # init tesseract
 tesseract_version = init_tesseract()
 
+
+lang = 'aze'  # Fixed language option
+def image_to_text(image, lang='aze'):
+    """
+    Convert an image file to text using Tesseract OCR.
+    
+    Parameters:
+    image (PIL.Image): Image file.
+    lang (str): Language code for Tesseract OCR (default is 'aze' for Azerbaijani).
+    
+    Returns:
+    str: Extracted text from the image.
+    """
+    return pytesseract.image_to_string(image, lang=lang)
+
 # Streamlit app
-@@ -86,31 +54,21 @@ def image_to_text(image, lang='aze'):
+st.title("B-Rabbit: OCR for 🇦🇿")
+
+uploaded_file = st.file_uploader(
+    "Let's do some magic 🐇",
+    type=["pdf", "png", "jpg", "jpeg"],
+    accept_multiple_files=False
+)
 lang = 'aze'  # Fixed language option
 
 if uploaded_file is not None:
@@ -96,11 +117,11 @@ if uploaded_file is not None:
             else:
                 image = Image.open(uploaded_file)
                 extracted_text = image_to_text(image, lang=lang)
-
+            
             # Display the extracted text
             st.subheader("Extracted Text")
             st.text_area("", extracted_text, height=400)
-
+            
             # Option to download the extracted text
             st.download_button(
                 label="Download Text",
