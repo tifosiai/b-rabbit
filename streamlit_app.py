@@ -75,9 +75,6 @@ st.set_page_config(
 # init tesseract
 tesseract_version = init_tesseract()
 
-st.title(f"Tesseract OCR :mag_right: {constants.flag_string}")
-st.markdown("---")
-
 # Streamlit app
 st.title("B-Rabbit: OCR for 🇦🇿")
 
@@ -87,6 +84,11 @@ uploaded_file = st.file_uploader(
     accept_multiple_files=False
 )
 lang = 'aze'  # Fixed language option
+oem_index = 3
+# get index of selected psm parameter
+psm_index = tesseract.psm.index(psm)
+# create custom oem and psm config string
+custom_oem_psm_config = tesseract.get_tesseract_config(oem_index=oem_index, psm_index=psm_index)
 
 if uploaded_file is not None:
     if uploaded_file.size > 200 * 1024 * 1024:  # 200 MB limit
