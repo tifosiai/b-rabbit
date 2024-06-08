@@ -4,6 +4,8 @@ from pdf2image import convert_from_path
 from PIL import Image
 import os
 import tempfile
+import numpy as np
+import cv2
 import helpers.constants as constants
 import helpers.opencv as opencv
 import helpers.pdfimage as pdfimage
@@ -44,7 +46,8 @@ def pdf_to_text(pdf_path, lang='aze'):
     extracted_text = ""
 
     for img in images:
-        text = pytesseract.image_to_string(img, lang=lang)
+        img_bw = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
+        text = pytesseract.image_to_string(img_bw, lang=lang)
         extracted_text += text + "\n"
     
     return extracted_text
@@ -60,7 +63,8 @@ def image_to_text(image, lang='aze'):
     Returns:
     str: Extracted text from the image.
     """
-    return pytesseract.image_to_string(image, lang=lang)
+    img_bw = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
+    return pytesseract.image_to_string(img_bw, lang=lang)
 
 # streamlit config
 st.set_page_config(
@@ -72,6 +76,9 @@ st.set_page_config(
 
 # init tesseract
 tesseract_version = init_tesseract()
+
+st.title(f"Tesseract OCR :mag_right: {constants.flag_string}")
+st.markdown("---")
 
 # Streamlit app
 st.title("B-Rabbit: OCR for 🇦🇿")
