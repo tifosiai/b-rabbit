@@ -5,8 +5,8 @@ opencv-python-headless
 pytesseract
 pdf2image
 scipy
-# pillow
+pillow
 # imutils
 # pandas
-# easyocr
+easyocr
 # PyMuPDF
