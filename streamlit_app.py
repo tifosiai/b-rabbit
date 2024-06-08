@@ -5,7 +5,6 @@ from PIL import Image
 import os
 import tempfile
 import numpy as np
-import cv2
 import helpers.constants as constants
 import helpers.opencv as opencv
 import helpers.pdfimage as pdfimage
