@@ -46,8 +46,7 @@ def pdf_to_text(pdf_path, lang='aze'):
     extracted_text = ""
 
     for img in images:
-        img_bw = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
-        text = pytesseract.image_to_string(img_bw, lang=lang)
+        text = pytesseract.image_to_string(img, lang=lang)
         extracted_text += text + "\n"
     
     return extracted_text
@@ -63,8 +62,7 @@ def image_to_text(image, lang='aze'):
     Returns:
     str: Extracted text from the image.
     """
-    img_bw = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
-    return pytesseract.image_to_string(img_bw, lang=lang)
+    return pytesseract.image_to_string(image, lang=lang)
 
 # streamlit config
 st.set_page_config(
